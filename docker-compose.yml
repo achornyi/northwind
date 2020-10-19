@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:12
+    container_name: northwind-postgresql
+    environment:
+      POSTGRES_DB: northwind
+      POSTGRES_USER: northwind_user
+      POSTGRES_PASSWORD: thewindisblowing
+    ports:
+      - '5432'
+    volumes:
+      - ./northwind/dbdata:/var/lib/postgresql/data
+      - ./northwind/northwind.sql:/docker-entrypoint-initdb.d/northwind.sql
+
+  redis:
+    image: redis:latest
+    container_name: northwind-redis
+    ports:
+      - '6379'
+
+  django:
+    container_name: northwind-django_server
+    build: .
+    image: docker_tutorial_django
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./northwind:/var/www/djangoproject
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+      - celery
+
+  celery:
+    build: .
+    command: celery -A northwind beat -l INFO
+    volumes:
+      - ./northwind:/var/www/djangoproject
+    depends_on:
+      - redis

@@ -124,9 +124,9 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 
 CELERY_BEAT_SCHEDULE = {
- 'send-greeting-every-5-seconds': {
+ 'send-greeting-every-minute': {
        'task': 'products.tasks.greeting_task',
-       'schedule': 5.0,
+       'schedule': 60.0,
     },
 }
 

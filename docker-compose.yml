@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: northwind_user
       POSTGRES_PASSWORD: thewindisblowing
     ports:
-      - '5432'
+      - '5432:5432'
     volumes:
       - ./northwind/dbdata:/var/lib/postgresql/data
       - ./northwind/northwind.sql:/docker-entrypoint-initdb.d/northwind.sql
@@ -20,6 +20,7 @@ services:
     ports:
       - '6379'
 
+# 0.0.0.0:5050
   django:
     container_name: northwind-django_server
     build: .
@@ -41,3 +42,14 @@ services:
       - ./northwind:/var/www/djangoproject
     depends_on:
       - redis
+
+# localhost:5050
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+            - '5050:80'

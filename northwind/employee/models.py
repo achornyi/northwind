@@ -24,6 +24,11 @@ class Employees(models.Model):
 
     class Meta:
         db_table = 'employees'
+        verbose_name = 'employees'
+        verbose_name_plural = 'employees'
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
 
 
 class EmployeeTerritories(models.Model):
@@ -33,11 +38,16 @@ class EmployeeTerritories(models.Model):
     class Meta:
         db_table = 'employee_territories'
         unique_together = (('employee', 'territory'),)
+        verbose_name = 'employee_territories'
+        verbose_name_plural = 'employee_territories'
 
 
 class Region(models.Model):
     region_id = models.SmallIntegerField(primary_key=True)
     region_description = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.region_description
 
     class Meta:
         db_table = 'region'
@@ -48,8 +58,13 @@ class Territories(models.Model):
     territory_description = models.CharField(max_length=50)
     region = models.ForeignKey(Region, models.DO_NOTHING)
 
+    def __str__(self):
+        return self.territory_description
+
     class Meta:
         db_table = 'territories'
+        verbose_name = 'territories'
+        verbose_name_plural = 'territories'
 
 
 class UsStates(models.Model):
@@ -58,5 +73,10 @@ class UsStates(models.Model):
     state_abbr = models.CharField(max_length=2, blank=True, null=True)
     state_region = models.CharField(max_length=50, blank=True, null=True)
 
+    def __str__(self):
+        return self.state_name
+
     class Meta:
         db_table = 'us_states'
+        verbose_name = 'us_states'
+        verbose_name_plural = 'us_states'

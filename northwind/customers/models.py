@@ -14,9 +14,15 @@ class Customers(models.Model):
     country = models.CharField(max_length=15, blank=True, null=True)
     phone = models.CharField(max_length=24, blank=True, null=True)
     fax = models.CharField(max_length=24, blank=True, null=True)
+    discount = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.customer_id
 
     class Meta:
         db_table = 'customers'
+        verbose_name = 'customers'
+        verbose_name_plural = 'customers'
 
 
 class CustomerCustomerDemo(models.Model):
@@ -26,6 +32,8 @@ class CustomerCustomerDemo(models.Model):
     class Meta:
         db_table = 'customer_customer_demo'
         unique_together = (('customer', 'customer_type'),)
+        verbose_name = 'customer_customer_demo'
+        verbose_name_plural = 'customer_customer_demo'
 
 
 class CustomerDemographics(models.Model):
@@ -34,3 +42,5 @@ class CustomerDemographics(models.Model):
 
     class Meta:
         db_table = 'customer_demographics'
+        verbose_name = 'customer_demographics'
+        verbose_name_plural = 'customer_demographics'

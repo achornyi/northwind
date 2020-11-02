@@ -28,11 +28,6 @@ class EmployeesAdmin(admin.ModelAdmin):
     list_filter = ('birth_date', 'hire_date', 'reports_to')
 
 
-@admin.register(EmployeeTerritories)
-class EmployeeTerritoriesAdmin(admin.ModelAdmin):
-    list_display = ('employee', 'territory')
-
-
 @admin.register(Region)
 class RegionAdmin(admin.ModelAdmin):
     list_display = ('region_id', 'region_description')

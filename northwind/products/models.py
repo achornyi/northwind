@@ -13,6 +13,11 @@ class Categories(models.Model):
 
     class Meta:
         db_table = 'categories'
+        verbose_name = 'categories'
+        verbose_name_plural = 'categories'
+
+    def __str__(self):
+        return self.category_name
 
 
 class Suppliers(models.Model):
@@ -31,6 +36,11 @@ class Suppliers(models.Model):
 
     class Meta:
         db_table = 'suppliers'
+        verbose_name = 'suppliers'
+        verbose_name_plural = 'suppliers'
+
+    def __str__(self):
+        return self.company_name
 
 
 class Products(models.Model):
@@ -47,6 +57,11 @@ class Products(models.Model):
 
     class Meta:
         db_table = 'products'
+        verbose_name = 'products'
+        verbose_name_plural = 'products'
+
+    def __str__(self):
+        return self.product_name
 
 
 class OrderDetails(models.Model):
@@ -59,6 +74,11 @@ class OrderDetails(models.Model):
     class Meta:
         db_table = 'order_details'
         unique_together = (('order', 'product'),)
+        verbose_name = 'order_details'
+        verbose_name_plural = 'order_details'
+
+    def __str__(self):
+        return self.order
 
 
 class Orders(models.Model):
@@ -79,6 +99,11 @@ class Orders(models.Model):
 
     class Meta:
         db_table = 'orders'
+        verbose_name = 'orders'
+        verbose_name_plural = 'orders'
+
+    def __str__(self):
+        return self.order_id
 
 
 class Shippers(models.Model):
@@ -88,3 +113,8 @@ class Shippers(models.Model):
 
     class Meta:
         db_table = 'shippers'
+        verbose_name = 'shippers'
+        verbose_name_plural = 'shippers'
+
+    def __str__(self):
+        return self.company_name

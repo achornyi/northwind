@@ -17,6 +17,7 @@ class CustomersAdmin(admin.ModelAdmin):
         'country',
         'phone',
         'fax',
+        'discount',
     )
 
 

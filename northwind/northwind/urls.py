@@ -21,7 +21,7 @@ import debug_toolbar
 router = routers.DefaultRouter()
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', include('employee.urls')),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('__debug__/', include(debug_toolbar.urls)),

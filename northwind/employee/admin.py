@@ -3,6 +3,10 @@ from django.contrib import admin
 from .models import Employees, EmployeeTerritories, Region, Territories, UsStates
 
 
+class EmployeesTerritoriesAdmin(admin.TabularInline):
+    model = EmployeeTerritories
+
+
 @admin.register(Employees)
 class EmployeesAdmin(admin.ModelAdmin):
     list_display = (
@@ -16,6 +20,9 @@ class EmployeesAdmin(admin.ModelAdmin):
         'address',
         'city',
         'region',
+        # 'territories',
+        'territory_description',
+        'region_description',
         'postal_code',
         'country',
         'home_phone',
@@ -26,6 +33,16 @@ class EmployeesAdmin(admin.ModelAdmin):
         'photo_path',
     )
     list_filter = ('birth_date', 'hire_date', 'reports_to')
+    inlines = [
+        EmployeesTerritoriesAdmin,
+    ]
+
+    def territory_description(self, obj):
+        return list(obj.territories.all())
+
+    def region_description(self, obj):
+        for ter in obj.territories.all():
+            return ter.region
 
 
 @admin.register(Region)

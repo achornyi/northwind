@@ -74,8 +74,8 @@ class OrderDetails(models.Model):
     class Meta:
         db_table = 'order_details'
         unique_together = (('order', 'product'),)
-        verbose_name = 'order_details'
-        verbose_name_plural = 'order_details'
+        verbose_name = 'order details'
+        verbose_name_plural = 'order details'
 
     def __str__(self):
         return self.order

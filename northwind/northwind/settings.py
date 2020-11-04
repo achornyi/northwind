@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 import os
+import socket
 from pathlib import Path
 
 import environ
@@ -33,7 +34,8 @@ DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
-INTERNAL_IPS = ('127.0.0.1', '0.0.0.0', 'localhost',)
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS = [ip[:-1] + '1' for ip in ips] + ['127.0.0.1', '10.0.2.2', 'localhost', '0.0.0.0']
 
 # Application definition
 

@@ -32,8 +32,8 @@ class CustomerCustomerDemo(models.Model):
     class Meta:
         db_table = 'customer_customer_demo'
         unique_together = (('customer', 'customer_type'),)
-        verbose_name = 'customer_customer_demo'
-        verbose_name_plural = 'customer_customer_demo'
+        verbose_name = 'customer demo'
+        verbose_name_plural = 'customer demo'
 
 
 class CustomerDemographics(models.Model):
@@ -42,5 +42,5 @@ class CustomerDemographics(models.Model):
 
     class Meta:
         db_table = 'customer_demographics'
-        verbose_name = 'customer_demographics'
-        verbose_name_plural = 'customer_demographics'
+        verbose_name = 'customer demographics'
+        verbose_name_plural = 'customer demographics'

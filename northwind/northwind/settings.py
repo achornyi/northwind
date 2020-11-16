@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # extensions
     'django_extensions',
+    'django_filters',
     'debug_toolbar',
     'rest_framework',
     # apps
@@ -172,6 +173,10 @@ USE_TZ = True
 STATIC_URL = env.str('STATIC_URL')
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter'
+    ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
 }

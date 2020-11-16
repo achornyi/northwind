@@ -1,17 +1,18 @@
-from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework import pagination
-from rest_framework.response import Response
+from rest_framework import viewsets
 from employee.models import Employees
 from employee.serializers import EmployeesSerializer
 
 
 class EmployeesViewSetPagination(pagination.PageNumberPagination):
-    page_size = 2
+    page_size = 5
     max_page_size = 1000
 
 
 # Create your views here.
-class EmployeesViewSet(viewsets.ViewSet):
+class EmployeesViewSet(viewsets.ModelViewSet):
     """
     Example empty viewset demonstrating the standard
     actions that will be handled by a router class.
@@ -19,18 +20,10 @@ class EmployeesViewSet(viewsets.ViewSet):
     If you're using format suffixes, make sure to also include
     the `format=None` keyword argument for each action.
     """
+    queryset = Employees.objects.all()
+    serializer_class = EmployeesSerializer
     pagination_class = EmployeesViewSetPagination
-
-    def list(self, request):
-        queryset = Employees.objects.all()
-        serializer = EmployeesSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def create(self, request):
-        pass
-
-    def update(self, request, pk=None):
-        pass
-
-    def destroy(self, request, pk=None):
-        pass
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
+    filter_fields = ('country', 'region', 'city', 'hire_date')
+    lookup_field = 'idEmployees'
+    search_fields = ('first_name', 'last_name', 'title')

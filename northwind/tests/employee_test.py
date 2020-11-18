@@ -1,100 +1,97 @@
+from unittest.mock import patch, ANY
+
 from rest_framework.test import APITestCase
+
 from employee.models import Employees
-
-
-TEST_EMPLOYEE = [
-        {
-            "employee_id": 1,
-            "territories": [
-                "Wilton",
-                "Neward"
-            ],
-            "last_name": "Davolio",
-            "first_name": "Nancy",
-            "title": "Sales Representative",
-            "title_of_courtesy": "Ms.",
-            "birth_date": "1948-12-08",
-            "hire_date": "1992-05-01",
-            "address": "507 - 20th Ave. E.\\nApt. 2A",
-            "city": "Seattle",
-            "region": "WA",
-            "postal_code": "98122",
-            "country": "USA",
-            "home_phone": "(206) 555-9857",
-            "extension": "5467",
-            "photo": "",
-            "notes": "Education includes a BA in psychology from Colorado State University in 1970.  She also "
-                     "completed The Art of the Cold Call.  Nancy is a member of Toastmasters International.",
-            "photo_path": "http://accweb/emmployees/davolio.bmp",
-            "reports_to": None
-        },
-        {
-            "employee_id": 2,
-            "territories": [
-                "Westboro",
-                "Bedford",
-                "Georgetow",
-                "Boston",
-                "Cambridge",
-                "Braintree",
-                "Louisville"
-            ],
-            "last_name": "Fuller",
-            "first_name": "Andrew",
-            "title": "Vice President, Sales",
-            "title_of_courtesy": "Dr.",
-            "birth_date": "1952-02-19",
-            "hire_date": "1992-08-14",
-            "address": "908 W. Capital Way",
-            "city": "Tacoma",
-            "region": "WA",
-            "postal_code": "98401",
-            "country": "USA",
-            "home_phone": "(206) 555-9482",
-            "extension": "3457",
-            "photo": "",
-            "notes": "Andrew received his BTS commercial in 1974 and a Ph.D. in international marketing from the "
-                     "University of Dallas in 1981.  He is fluent in French and Italian and reads German.  He joined "
-                     "the company as a sales representative, was promoted to sales manager in January 1992 and to "
-                     "vice president of sales in March 1993.  Andrew is a member of the Sales Management Roundtable, "
-                     "the Seattle Chamber of Commerce, and the Pacific Rim Importers Association.",
-            "photo_path": "http://accweb/emmployees/fuller.bmp",
-            "reports_to": None
-        },
-]
+from employee.views import EmployeesViewSetPagination
 
 
 class EmployeeTest(APITestCase):
+    def setUp(self) -> None:
+        self.employee_john = Employees.objects.create(
+            last_name="John", first_name="Doe",
+        )
+        self.employee_jane = Employees.objects.create(
+            last_name="Jane", first_name="Doe",
+        )
 
-    def test_entries_access(self):
-        response = self.client.get('/employees/')
+    def test_list(self):
+        response = self.client.get("/employees/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["count"], 0)
+        results_ = response.json()["results"]
+        self.assertEqual(
+            len(results_), 2,
+        )
+        self.assertGreaterEqual(
+            results_[0].items(),
+            {
+                "employee_id": self.employee_john.employee_id,
+                "last_name": "John",
+                "first_name": "Doe",
+            }.items(),
+        )
+        self.assertGreaterEqual(
+            results_[1].items(),
+            {
+                "employee_id": self.employee_jane.employee_id,
+                "last_name": "Jane",
+                "first_name": "Doe",
+            }.items(),
+        )
 
-    def test_employee_add(self):
-        for emp in TEST_EMPLOYEE:
-            Employees.objects.create(
-                last_name=emp["last_name"],
-                first_name=emp["first_name"],
+    def test_details(self):
+        response = self.client.get(
+            "/employees/{employee_id}/".format(
+                employee_id=self.employee_john.employee_id
             )
-        response = self.client.get('/employees/')
+        )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["count"], 2)
-        response = self.client.get('/employees/1/')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["employee_id"], 1)
-        response = self.client.post('/employees/', {'last_name': 'fake', 'first_name': 'test'})
+        self.assertEqual(
+            response.json(),
+            {
+                "employee_id": self.employee_john.employee_id,
+                "territories": [],
+                "last_name": "John",
+                "first_name": "Doe",
+                "title": None,
+                "title_of_courtesy": None,
+                "birth_date": None,
+                "hire_date": None,
+                "address": None,
+                "city": None,
+                "region": None,
+                "postal_code": None,
+                "country": None,
+                "home_phone": None,
+                "extension": None,
+                "photo": None,
+                "notes": None,
+                "photo_path": None,
+                "reports_to": None,
+            },
+        )
+
+    def test_create(self):
+        response = self.client.post(
+            "/employees/", {"last_name": "fake", "first_name": "test"}
+        )
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(Employees.objects.count(), 3)
+        created_instance = Employees.objects.get(
+            employee_id=response.json()["employee_id"]
+        )
+        self.assertEqual(created_instance.first_name, "test")
+        self.assertEqual(created_instance.last_name, "fake")
 
-    def test_employee_pagination(self):
-        for _ in range(15):
-            Employees.objects.create(
-                last_name="last_name",
-                first_name="first_name",
-            )
-        response = self.client.get('/employees/?page=1')
+    @patch.object(EmployeesViewSetPagination, "page_size", 1)
+    def test_pagination(self):
+        response = self.client.get("/employees/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data["results"]), 5)
-        self.assertEqual(Employees.objects.count(), 15)
-
+        self.assertEqual(
+            response.json(),
+            {
+                "count": 2,
+                "next": "http://testserver/employees/?page=2",
+                "previous": None,
+                "results": [ANY],  # one result
+            },
+        )

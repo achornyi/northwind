@@ -20,7 +20,7 @@ class EmployeesViewSet(viewsets.ModelViewSet):
     If you're using format suffixes, make sure to also include
     the `format=None` keyword argument for each action.
     """
-    queryset = Employees.objects.all()
+    queryset = Employees.objects.all().order_by('employee_id')
     serializer_class = EmployeesSerializer
     pagination_class = EmployeesViewSetPagination
     filter_backends = (DjangoFilterBackend, filters.SearchFilter,)

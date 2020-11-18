@@ -6,7 +6,7 @@ from employee.models import Employees
 
 # Create your models here.
 class Categories(models.Model):
-    category_id = models.SmallIntegerField(primary_key=True)
+    category_id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=15)
     description = models.TextField(blank=True, null=True)
     picture = models.BinaryField(blank=True, null=True)
@@ -21,7 +21,7 @@ class Categories(models.Model):
 
 
 class Suppliers(models.Model):
-    supplier_id = models.SmallIntegerField(primary_key=True)
+    supplier_id = models.AutoField(primary_key=True)
     company_name = models.CharField(max_length=40)
     contact_name = models.CharField(max_length=30, blank=True, null=True)
     contact_title = models.CharField(max_length=30, blank=True, null=True)
@@ -44,7 +44,7 @@ class Suppliers(models.Model):
 
 
 class Products(models.Model):
-    product_id = models.SmallIntegerField(primary_key=True)
+    product_id = models.AutoField(primary_key=True)
     product_name = models.CharField(max_length=40)
     supplier = models.ForeignKey('Suppliers', models.DO_NOTHING, blank=True, null=True)
     category = models.ForeignKey(Categories, models.DO_NOTHING, blank=True, null=True)
@@ -82,7 +82,7 @@ class OrderDetails(models.Model):
 
 
 class Orders(models.Model):
-    order_id = models.SmallIntegerField(primary_key=True)
+    order_id = models.AutoField(primary_key=True)
     customer = models.ForeignKey(Customers, models.DO_NOTHING, blank=True, null=True)
     employee = models.ForeignKey(Employees, models.DO_NOTHING, blank=True, null=True)
     order_date = models.DateField(blank=True, null=True)
@@ -107,7 +107,7 @@ class Orders(models.Model):
 
 
 class Shippers(models.Model):
-    shipper_id = models.SmallIntegerField(primary_key=True)
+    shipper_id = models.AutoField(primary_key=True)
     company_name = models.CharField(max_length=40)
     phone = models.CharField(max_length=24, blank=True, null=True)
 

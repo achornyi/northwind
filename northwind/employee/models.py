@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Region(models.Model):
-    region_id = models.SmallIntegerField(primary_key=True)
+    region_id = models.AutoField(primary_key=True)
     region_description = models.CharField(max_length=50)
 
     def __str__(self):
@@ -14,7 +14,7 @@ class Region(models.Model):
 
 
 class Territories(models.Model):
-    territory_id = models.CharField(primary_key=True, max_length=20)
+    territory_id = models.AutoField(primary_key=True)
     territory_description = models.CharField(max_length=50)
     region = models.ForeignKey(Region, models.DO_NOTHING)
 
@@ -58,7 +58,7 @@ class Employees(models.Model):
 
 
 class UsStates(models.Model):
-    state_id = models.SmallIntegerField(primary_key=True)
+    state_id = models.AutoField(primary_key=True)
     state_name = models.CharField(max_length=100, blank=True, null=True)
     state_abbr = models.CharField(max_length=2, blank=True, null=True)
     state_region = models.CharField(max_length=50, blank=True, null=True)

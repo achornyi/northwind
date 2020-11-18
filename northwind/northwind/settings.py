@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # extensions
     'django_extensions',
     'django_filters',
+    'django_nose',
     'debug_toolbar',
     'rest_framework',
     # apps
@@ -132,6 +133,15 @@ CELERY_BEAT_SCHEDULE = {
        'schedule': 60.0,
     },
 }
+
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Tell nose to measure coverage on the apps
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=customers,employee,products',
+]
 
 
 # Password validation

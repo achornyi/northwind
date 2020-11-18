@@ -6,6 +6,9 @@ static/
 env/
 *.log
 .coverage
+.coverage.*
+coverage.xml
+*.cover
 
 northwind/dbdata
 

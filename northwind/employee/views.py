@@ -25,5 +25,5 @@ class EmployeesViewSet(viewsets.ModelViewSet):
     pagination_class = EmployeesViewSetPagination
     filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
     filter_fields = ('country', 'region', 'city', 'hire_date')
-    lookup_field = 'idEmployees'
+    lookup_field = 'employee_id'
     search_fields = ('first_name', 'last_name', 'title')

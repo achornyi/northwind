@@ -1,7 +1,5 @@
-from django.test import TestCase
-from django.test.client import Client
+from rest_framework.test import APITestCase
 from employee.models import Employees
-from employee.views import EmployeesViewSet
 
 
 TEST_EMPLOYEE = [
@@ -66,14 +64,10 @@ TEST_EMPLOYEE = [
 ]
 
 
-class EmployeeTest(TestCase):
-
-    def setUp(self):
-        self.c = Client()
-        self.view = EmployeesViewSet()
+class EmployeeTest(APITestCase):
 
     def test_entries_access(self):
-        response = self.c.get('/employees/')
+        response = self.client.get('/employees/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["count"], 0)
 
@@ -83,10 +77,13 @@ class EmployeeTest(TestCase):
                 last_name=emp["last_name"],
                 first_name=emp["first_name"],
             )
-        response = self.c.get('/employees/')
+        response = self.client.get('/employees/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["count"], 2)
-        response = self.c.post('/employees/', {'last_name': 'fake', 'first_name': 'test'})
+        response = self.client.get('/employees/1/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["employee_id"], 1)
+        response = self.client.post('/employees/', {'last_name': 'fake', 'first_name': 'test'})
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Employees.objects.count(), 3)
 
@@ -96,8 +93,8 @@ class EmployeeTest(TestCase):
                 last_name="last_name",
                 first_name="first_name",
             )
-        request = self.c.get('/employees/?page=2')
-        response = self.view(request)
+        response = self.client.get('/employees/?page=1')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["count"], 5)
+        self.assertEqual(len(response.data["results"]), 5)
+        self.assertEqual(Employees.objects.count(), 15)
 

@@ -14,7 +14,7 @@ class Region(models.Model):
 
 
 class Territories(models.Model):
-    territory_id = models.AutoField(primary_key=True)
+    territory_id = models.CharField(primary_key=True, max_length=20)
     territory_description = models.CharField(max_length=50)
     region = models.ForeignKey(Region, models.DO_NOTHING)
 
